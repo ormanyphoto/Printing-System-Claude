@@ -45,13 +45,14 @@ ul { list-style: none; }
 button { cursor: pointer; border: none; outline: none; background: none; font-family: inherit; }
 input, select, textarea { font-family: inherit; }
 
-h1,h2,h3,h4 {
+/* Scoped to landing page — avoids overriding order/admin headings */
+.landing-page h1, .landing-page h2, .landing-page h3, .landing-page h4 {
   font-family: var(--serif);
   font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.015em;
 }
-.rtl h1, .rtl h2, .rtl h3, .rtl h4 {
+.rtl .landing-page h1, .rtl .landing-page h2, .rtl .landing-page h3, .rtl .landing-page h4 {
   font-family: var(--heb);
   letter-spacing: 0;
 }

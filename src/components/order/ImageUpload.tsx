@@ -40,7 +40,7 @@ const ImageUpload = ({ uploadedImage, isUploading, uploadProgress, onFileSelect,
           <img
             src={uploadedImage.storageUrl || uploadedImage.thumbnailUrl}
             alt="Uploaded preview"
-            className="w-full max-h-48 object-contain rounded-sm border border-border"
+            className="w-full max-h-48 object-contain rounded-md border border-border"
             onError={(e) => {
               const target = e.currentTarget;
               if (target.src !== uploadedImage.previewUrl) {
@@ -87,11 +87,11 @@ const ImageUpload = ({ uploadedImage, isUploading, uploadProgress, onFileSelect,
           <div className="relative">
             <div className="w-20 h-20 rounded-full border-2 border-foreground/10 flex items-center justify-center">
               <div className="w-16 h-16 rounded-full bg-foreground/5 flex items-center justify-center">
-                <Loader2 className="w-8 h-8 text-foreground animate-spin" strokeWidth={1.5} />
+                <Loader2 className="w-8 h-8 text-accent animate-spin" strokeWidth={1.5} />
               </div>
             </div>
           </div>
-          
+
           <div className="text-center space-y-1.5">
             <h3 className="font-display text-2xl text-foreground tracking-tight">
               {uploadProgress >= 95
@@ -104,9 +104,9 @@ const ImageUpload = ({ uploadedImage, isUploading, uploadProgress, onFileSelect,
                 : t("upload.pleaseWait", "Processing your high-resolution image…")}
             </p>
           </div>
-          
+
           <div className="w-full max-w-xs space-y-3">
-            <Progress value={uploadProgress} className="h-1 bg-border/40" />
+            <Progress value={uploadProgress} className="h-1.5 bg-border/40" />
             <div className="flex justify-between font-body text-xs text-muted-foreground">
               <span>{uploadProgress}% {t("upload.complete", "complete")}</span>
             </div>
@@ -122,32 +122,29 @@ const ImageUpload = ({ uploadedImage, isUploading, uploadProgress, onFileSelect,
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleDrop}
     >
-      {/* Dashed border container — WhiteWall style */}
-      <div className="border-2 border-dashed border-border rounded-sm py-14 sm:py-20 px-6 transition-colors duration-300 group-hover:border-foreground/30 bg-background">
-        <div className="flex flex-col items-center gap-6">
-          
-          {/* Upload icon */}
-          <ImageUp 
-            className="w-12 h-12 text-muted-foreground/50 transition-colors duration-300 group-hover:text-foreground/70" 
-            strokeWidth={1.2} 
-          />
+      <div className="relative border-2 border-dashed border-border/60 rounded-xl py-16 sm:py-20 px-8 transition-all duration-300 group-hover:border-accent/50 group-hover:bg-accent/[0.02] bg-card/50">
+        <div className="flex flex-col items-center gap-5">
 
-          {/* Title + subtitle grouped tightly */}
+          {/* Upload icon with gold accent ring */}
+          <div className="w-16 h-16 rounded-full border-2 border-accent/20 flex items-center justify-center transition-all duration-300 group-hover:border-accent/40 group-hover:bg-accent/5">
+            <ImageUp
+              className="w-7 h-7 text-accent/60 transition-colors duration-300 group-hover:text-accent"
+              strokeWidth={1.5}
+            />
+          </div>
+
+          {/* Title + formats */}
           <div className="text-center space-y-2">
-            <h3 className="font-body text-xl sm:text-2xl text-foreground tracking-tight font-medium">
+            <p className="font-body text-lg sm:text-xl text-foreground font-medium tracking-tight">
               {t("upload.drag")}
-              <br />
-              <span className="text-sm sm:text-base font-normal text-muted-foreground">{t("upload.formats.line")}</span>
-            </h3>
-            <p className="font-body text-xs text-muted-foreground/50 tracking-wide">
-              {t("upload.supported")}
-              <br />
-              {t("upload.maxSize")}
+            </p>
+            <p className="font-body text-sm text-muted-foreground">
+              JPEG, PNG, TIFF, HEIC &middot; {t("upload.maxSize")}
             </p>
           </div>
 
           {/* Upload button */}
-          <div className="px-12 py-3.5 bg-accent text-accent-foreground font-body text-sm font-bold tracking-[0.2em] uppercase transition-all duration-200 group-hover:brightness-110">
+          <div className="px-8 py-3 rounded-md bg-accent text-accent-foreground font-body text-xs font-bold tracking-[0.15em] uppercase transition-all duration-200 group-hover:brightness-110 group-hover:shadow-md">
             {t("upload.browse", "Upload Photos")}
           </div>
         </div>

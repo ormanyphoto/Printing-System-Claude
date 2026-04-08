@@ -72,7 +72,7 @@ function LandingPage() {
   const ctx = { lang, setLang, t };
 
   return (
-    <>
+    <div className="landing-page">
       <MobileMenu
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
@@ -121,7 +121,7 @@ function LandingPage() {
       <Footer {...ctx} />
       <Link to="/order" className="sticky-cta">{t('Order Now →', 'הזמן עכשיו →')}</Link>
       <Toast message={toastMsg} visible={toastVisible} />
-    </>
+    </div>
   );
 }
 

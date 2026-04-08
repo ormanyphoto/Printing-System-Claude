@@ -1,0 +1,1 @@
+UPDATE products SET thumbnail_url = 'https://hqsehralazutmupngdmz.supabase.co/storage/v1/object/public/admin-thumbnails/products/hd-metal-thumb.jpg' WHERE slug = 'hd-metal';

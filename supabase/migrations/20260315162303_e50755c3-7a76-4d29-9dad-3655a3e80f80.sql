@@ -1,0 +1,2 @@
+INSERT INTO public.products (slug, name_en, name_he, description_en, description_he, enabled, sort_order, max_width_cm, max_height_cm)
+VALUES ('wood-print', 'Wood Print', 'הדפסה על עץ', 'Premium UV printing directly on natural wood panels with visible grain texture', 'הדפסת UV פרימיום ישירות על לוחות עץ טבעיים עם מרקם גרעינים נראה', true, 60, 120, 120);

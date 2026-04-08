@@ -1,0 +1,5 @@
+UPDATE products SET thumbnail_url = 'https://hqsehralazutmupngdmz.supabase.co/storage/v1/object/public/admin-thumbnails/products/photo-paper-thumb.jpg' WHERE slug = 'photo-paper';
+UPDATE products SET thumbnail_url = 'https://hqsehralazutmupngdmz.supabase.co/storage/v1/object/public/admin-thumbnails/products/framed-thumb.jpg' WHERE slug = 'framed';
+UPDATE products SET thumbnail_url = 'https://hqsehralazutmupngdmz.supabase.co/storage/v1/object/public/admin-thumbnails/products/canvas-thumb.jpg' WHERE slug = 'canvas';
+UPDATE products SET thumbnail_url = 'https://hqsehralazutmupngdmz.supabase.co/storage/v1/object/public/admin-thumbnails/products/dibond-thumb.jpg' WHERE slug = 'dibond';
+UPDATE products SET thumbnail_url = 'https://hqsehralazutmupngdmz.supabase.co/storage/v1/object/public/admin-thumbnails/products/plexiglass-thumb.jpg' WHERE slug = 'plexiglass';

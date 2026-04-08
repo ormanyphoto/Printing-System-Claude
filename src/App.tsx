@@ -1,90 +1,104 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'sonner';
-import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import Marquee from './components/Marquee';
+import Products from './components/Products';
+import Features from './components/Features';
+import Process from './components/Process';
+import Gallery from './components/Gallery';
+import OrderSection from './components/OrderSection';
+import About from './components/About';
+import CertBand from './components/CertBand';
+import Testimonials from './components/Testimonials';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
+import Toast from './components/Toast';
+import MobileMenu from './components/MobileMenu';
 
-// Pages
-import Index from './pages/Index';
-import Order from './pages/Order';
-import Login from './pages/Login';
-import OrderHistory from './pages/OrderHistory';
-import NotFound from './pages/NotFound';
+export type Lang = 'en' | 'he';
 
-// Admin Pages
-import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminProducts from './pages/admin/AdminProducts';
-import AdminProductDetail from './pages/admin/AdminProductDetail';
-import AdminSizes from './pages/admin/AdminSizes';
-import AdminShipping from './pages/admin/AdminShipping';
-import AdminFrameStyles from './pages/admin/AdminFrameStyles';
-import AdminFrameColors from './pages/admin/AdminFrameColors';
-import AdminFrameWidths from './pages/admin/AdminFrameWidths';
-import AdminGlazing from './pages/admin/AdminGlazing';
-import AdminSubframes from './pages/admin/AdminSubframes';
-import AdminFinishes from './pages/admin/AdminFinishes';
-import AdminSubtypes from './pages/admin/AdminSubtypes';
-import AdminPriceTiers from './pages/admin/AdminPriceTiers';
-import AdminOrders from './pages/admin/AdminOrders';
-import AdminIntegrations from './pages/admin/AdminIntegrations';
-import AdminTooltips from './pages/admin/AdminTooltips';
-
-// Layout
-import AdminLayout from './components/admin/AdminLayout';
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      staleTime: 5 * 60 * 1000,
-    },
-  },
-});
+export interface LangContextType {
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  t: (en: string, he: string) => string;
+}
 
 function App() {
-  const { i18n } = useTranslation();
+  const [lang, setLangState] = useState<Lang>('en');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [toastMsg, setToastMsg] = useState('');
+  const [toastVisible, setToastVisible] = useState(false);
+
+  const setLang = (l: Lang) => {
+    setLangState(l);
+    document.documentElement.lang = l;
+    document.documentElement.dir = l === 'he' ? 'rtl' : 'ltr';
+    document.body.classList.toggle('rtl', l === 'he');
+    document.body.style.fontFamily = l === 'he'
+      ? "'Heebo', 'Arial Hebrew', sans-serif"
+      : "'DM Sans', 'Helvetica Neue', sans-serif";
+    showToast(l === 'he' ? 'שפה: עברית ✓' : 'Language: English ✓');
+  };
+
+  const t = (en: string, he: string) => lang === 'he' ? he : en;
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setToastVisible(true);
+    setTimeout(() => setToastVisible(false), 3200);
+  };
 
   useEffect(() => {
-    document.documentElement.lang = i18n.language;
-    document.documentElement.dir = i18n.language === 'he' ? 'rtl' : 'ltr';
-  }, [i18n.language]);
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('revealed');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -64px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Initial reveal for above-fold
+    document.querySelectorAll('.reveal').forEach(el => {
+      if (el.getBoundingClientRect().top < window.innerHeight) {
+        el.classList.add('revealed');
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const ctx = { lang, setLang, t };
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Index />} />
-          <Route path="/order" element={<Order />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/order-history" element={<OrderHistory />} />
-
-          {/* Admin Routes */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="products" element={<AdminProducts />} />
-            <Route path="product/:slug" element={<AdminProductDetail />} />
-            <Route path="sizes" element={<AdminSizes />} />
-            <Route path="shipping" element={<AdminShipping />} />
-            <Route path="frame-styles" element={<AdminFrameStyles />} />
-            <Route path="frame-colors" element={<AdminFrameColors />} />
-            <Route path="frame-widths" element={<AdminFrameWidths />} />
-            <Route path="glazing" element={<AdminGlazing />} />
-            <Route path="subframes" element={<AdminSubframes />} />
-            <Route path="finishes" element={<AdminFinishes />} />
-            <Route path="subtypes" element={<AdminSubtypes />} />
-            <Route path="price-tiers" element={<AdminPriceTiers />} />
-            <Route path="orders" element={<AdminOrders />} />
-            <Route path="integrations" element={<AdminIntegrations />} />
-            <Route path="tooltips" element={<AdminTooltips />} />
-          </Route>
-
-          {/* 404 */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Toaster position="top-right" richColors />
-      </BrowserRouter>
-    </QueryClientProvider>
+    <>
+      <MobileMenu
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        {...ctx}
+      />
+      <Navbar
+        onMenuOpen={() => setMobileMenuOpen(true)}
+        {...ctx}
+      />
+      <Hero {...ctx} />
+      <Marquee {...ctx} />
+      <Products {...ctx} showToast={showToast} />
+      <Features {...ctx} />
+      <Process {...ctx} />
+      <Gallery {...ctx} />
+      <OrderSection {...ctx} showToast={showToast} />
+      <About {...ctx} />
+      <CertBand {...ctx} />
+      <Testimonials {...ctx} />
+      <Contact {...ctx} showToast={showToast} />
+      <Footer {...ctx} />
+      <a href="#order" className="sticky-cta">{t('Order Now →', 'הזמן עכשיו →')}</a>
+      <Toast message={toastMsg} visible={toastVisible} />
+    </>
   );
 }
 

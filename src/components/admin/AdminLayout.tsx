@@ -4,21 +4,96 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { User } from "@supabase/supabase-js";
-import { X } from "lucide-react";
+import {
+  X,
+  LayoutDashboard,
+  Package,
+  FileText,
+  ShoppingCart,
+  Truck,
+  Search,
+  Settings,
+} from "lucide-react";
 import { useEmbed } from "@/hooks/useEmbed";
 
-const NAV_ITEMS = [
-  { label: "Products & Pricing", path: "/admin/products" },
-  { label: "Sizes", path: "/admin/sizes" },
-  { label: "Shipping Data", path: "/admin/shipping" },
-  { label: "Frame Styles", path: "/admin/frame-styles" },
-  { label: "Frame Colors", path: "/admin/frame-colors" },
-  { label: "Glazing", path: "/admin/glazing" },
-  { label: "Subframes", path: "/admin/subframes" },
-  { label: "Frame Widths", path: "/admin/frame-widths" },
-  { label: "Orders", path: "/admin/orders" },
-  { label: "Integrations", path: "/admin/integrations" },
-  { label: "Tooltips", path: "/admin/tooltips" },
+interface NavItem {
+  label: string;
+  path: string;
+}
+
+interface NavGroup {
+  title: string;
+  icon: React.ReactNode;
+  items: NavItem[];
+}
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    title: "Dashboard",
+    icon: <LayoutDashboard className="h-3 w-3 inline-block mr-1 -mt-px" />,
+    items: [{ label: "Dashboard", path: "/admin" }],
+  },
+  {
+    title: "Catalog",
+    icon: <Package className="h-3 w-3 inline-block mr-1 -mt-px" />,
+    items: [
+      { label: "Products & Pricing", path: "/admin/products" },
+      { label: "Sizes", path: "/admin/sizes" },
+      { label: "Frame Styles", path: "/admin/frame-styles" },
+      { label: "Frame Colors", path: "/admin/frame-colors" },
+      { label: "Frame Widths", path: "/admin/frame-widths" },
+      { label: "Glazing", path: "/admin/glazing" },
+      { label: "Subframes", path: "/admin/subframes" },
+      { label: "Finishes", path: "/admin/finishes" },
+      { label: "Subtypes", path: "/admin/subtypes" },
+      { label: "Price Tiers", path: "/admin/price-tiers" },
+      { label: "Tooltips", path: "/admin/tooltips" },
+    ],
+  },
+  {
+    title: "Content",
+    icon: <FileText className="h-3 w-3 inline-block mr-1 -mt-px" />,
+    items: [
+      { label: "Pages", path: "/admin/pages" },
+      { label: "Blog Posts", path: "/admin/blog" },
+      { label: "Media Library", path: "/admin/media" },
+      { label: "Translations", path: "/admin/translations" },
+    ],
+  },
+  {
+    title: "Orders & Customers",
+    icon: <ShoppingCart className="h-3 w-3 inline-block mr-1 -mt-px" />,
+    items: [
+      { label: "Orders", path: "/admin/orders" },
+      { label: "Checkout Settings", path: "/admin/checkout" },
+      { label: "Customers", path: "/admin/customers" },
+      { label: "Subscribers", path: "/admin/subscribers" },
+    ],
+  },
+  {
+    title: "Shipping & Tax",
+    icon: <Truck className="h-3 w-3 inline-block mr-1 -mt-px" />,
+    items: [
+      { label: "Shipping Zones", path: "/admin/shipping-zones" },
+      { label: "Shipping Rates", path: "/admin/shipping-rates" },
+      { label: "Packages", path: "/admin/packages" },
+      { label: "Tax Rates", path: "/admin/tax-rates" },
+      { label: "HS Codes", path: "/admin/hs-codes" },
+    ],
+  },
+  {
+    title: "SEO & Marketing",
+    icon: <Search className="h-3 w-3 inline-block mr-1 -mt-px" />,
+    items: [{ label: "SEO Manager", path: "/admin/seo" }],
+  },
+  {
+    title: "System",
+    icon: <Settings className="h-3 w-3 inline-block mr-1 -mt-px" />,
+    items: [
+      { label: "Integrations", path: "/admin/integrations" },
+      { label: "Shipping Data", path: "/admin/shipping" },
+    ],
+  },
 ];
 
 const AdminLayout = () => {
@@ -83,7 +158,7 @@ const AdminLayout = () => {
       {!isEmbed && (
         <header className="border-b border-border bg-card px-6 py-4 flex items-center justify-between">
           <div>
-            <h1 className="font-display text-2xl text-gold">Print Studio — Back Office</h1>
+            <h1 className="font-display text-2xl text-gold">ChromaLuxe — Back Office</h1>
             <p className="font-body text-sm text-muted-foreground mt-0.5">Manage products, pricing, sizes, and integrations</p>
           </div>
           <Button
@@ -99,26 +174,42 @@ const AdminLayout = () => {
 
       <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="w-52 border-r border-border bg-card flex flex-col shrink-0">
+        <aside className="w-56 border-r border-border bg-card flex flex-col shrink-0">
           <nav className="flex-1 overflow-y-auto py-4">
-            {/* NAVIGATION group */}
-            <p className="px-4 pb-1.5 font-body text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">Navigation</p>
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`block px-4 py-1.5 font-body text-sm transition-colors ${
-                  isActive(item.path)
-                    ? "text-foreground font-semibold bg-secondary/60"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/30"
-                }`}
-              >
-                {item.label}
-              </Link>
+            {NAV_GROUPS.map((group, idx) => (
+              <div key={group.title}>
+                {/* Group label */}
+                <p
+                  className={`px-4 pb-1.5 font-body text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground flex items-center${
+                    idx > 0 ? " pt-4" : ""
+                  }`}
+                >
+                  {group.icon}
+                  {group.title}
+                </p>
+
+                {/* Group items */}
+                {group.items.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`block px-4 py-1.5 font-body text-sm transition-colors ${
+                      isActive(item.path)
+                        ? "text-foreground font-semibold bg-secondary/60"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/30"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
             ))}
 
-            {/* PRODUCT group */}
-            <p className="px-4 pt-5 pb-1.5 font-body text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">Product</p>
+            {/* PRODUCT group — dynamic from database */}
+            <p className="px-4 pt-4 pb-1.5 font-body text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground flex items-center">
+              <Package className="h-3 w-3 inline-block mr-1 -mt-px" />
+              Product
+            </p>
             {products.map((p) => (
               <Link
                 key={p.id}
